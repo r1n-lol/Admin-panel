@@ -45,7 +45,22 @@
                 <td>{{ $enrollment->user->name }}</td>
                 <td>{{ $enrollment->product->name }}</td>
                 <td>
-                    <span class="badge bg-success">оплачено</span>
+                    @switch($enrollment->status)
+                        @case('pending' )
+                            <span class="badge bg-warning text-dark">Ожидает оплаты</span>
+                            @break
+                        @case('completed')
+                            <span class="badge bg-success">Оплачено</span>
+                            @break
+                        @case('failed' )
+                            <span class="badge bg-danger">Ошибка</span>
+                            @break
+                        @case( 'refunded' )
+                            <span class="badge bg-info"> Возврат <span>
+                            @break
+                        @default
+                            <span class="badge bg-secondary">{{ $enrollment->status }}</span>
+                    @endswitch
                 </td>
 
             </tr>
