@@ -54,13 +54,6 @@ class ProductController extends Controller
             ->with('success', 'Товар усешно создан');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Форма редактирования товара

@@ -12,7 +12,7 @@
     <h2>Заказы пользователей</h2>
 
     <!-- Форма фильтрации по курсу -->
-    {{-- <form action="{{ route('enrollments.index') }}" method="GET" class="row g-3 mb-3">
+    <form action="{{ route('enrollments.index') }}" method="GET" class="row g-3 mb-3">
         <div class="col-auto">
             <select name="course_id" class="form-select">
                 <option value="">Все товары</option>
@@ -26,7 +26,7 @@
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Фильтр</button>
         </div>
-    </form> --}}
+    </form>
 
     <!-- Таблица записей -->
     <table class="table table-bordered">

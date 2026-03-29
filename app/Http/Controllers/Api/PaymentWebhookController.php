@@ -3,25 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Enrollment;
+use App\Http\Requests\PaymentWebhookRequest;
 
 class PaymentWebhookController extends Controller
 {
-        public function handle(Request $request)
+        public function handle(PaymentWebhookRequest $request)
     {
         // Валидация входящих данных 
-        $data = $request->validate([
-            'order_id' => 'required|integer',
-            'status' => 'required|in:success,failed'
-        ]);
-
+        $data = $request->validated();
         // Поиск заказа
-        $enrollment = Enrollment::find($data['order_id']);
+        $enrollment = Enrollment::where('order_id', $data['order_id'])->firstOrFail();
 
         if ($enrollment) {
             // Обновляем статус
-            $enrollment->payment_status = $data['status'];
+            $enrollment->status = $data['status'];
             $enrollment->save();
         }
 

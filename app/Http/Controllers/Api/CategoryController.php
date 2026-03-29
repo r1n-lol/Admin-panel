@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Http\Resources\Api\ProductResource;
+use App\Http\Resources\Api\CategoryCollection;
 
 class CategoryController extends Controller
 {
@@ -13,30 +15,32 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(5);
+        $categories = Category::paginate(10);
+        return new CategoryCollection($categories);
 
         //Формируем данные для каждого курса.
         //Перебираем с помощью map()
 
-        $data = $categories->map(function ($category) {
-            return [
-                'name' => $category->name,
-                'description' => $category->description,
-            ];
-        });
+        // $data = $categories->map(function ($category) {
+        //     return [
+        //         'id' => $category->id,
+        //         'name' => $category->name,
+        //         'description' => $category->description,
+        //     ];
+        // });
 
         //делаем пагинацию
 
-        $pagination = [
-            'total' => $categories->total(),
-            'current' => $categories->currentPage(),
-            'per_page' => $categories->perPage(),
-        ];
+        // $pagination = [
+        //     'total' => $categories->total(),
+        //     'current' => $categories->currentPage(),
+        //     'per_page' => $categories->perPage(),
+        // ];
 
-        return response()->json([
-            'data' => $data,
-            'pagination' => $pagination,
-        ], 200);
+        // return response()->json([
+        //     'data' =>CategoryResource::collection($categories),
+        //     'pagination' => $pagination,
+        // ], 200);
     }
 
 
@@ -47,19 +51,31 @@ class CategoryController extends Controller
     {
         //Подгружаем все свзяанные с конкретной категорией товары и ищем курс по ключу  
         $category = Category::with('products')->findOrFail($id);
-
-        $products = $category->products->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'price' => number_format($product->price, 2, '.', ''),
-                'image_url' => $product->image ? asset('storage/' . $product->image) : null,
-            ];
-        });
-
         return response()->json([
-            'data' => $products
-        ],200);
+            'data' => ProductResource::collection($category->products),
+        ], 200);
+
+        // $products = $category->products->map(function ($product) {
+        //     return [
+        //         'id' => $product->id,
+        //         'name' => $product->name,
+        //         'description' => $product->description,
+        //         'price' => number_format($product->price, 2, '.', ''),
+        //         'image_url' => $product->image ? asset('storage/' . $product->image) : null,
+        //     ];
+        // });
+    }
+
+    public function store(Request $request){
+        $validate = $request-> validate([
+            'name' => 'required|string',
+            'description' => 'required|string'
+        ]);
+
+        Category::create($validate);
+
+        return  response()->json([
+            'data' => 'Товар успешно добавлен',
+        ], 201);
     }
 }

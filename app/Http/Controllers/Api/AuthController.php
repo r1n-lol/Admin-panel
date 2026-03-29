@@ -40,7 +40,7 @@ class AuthController extends Controller
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'massage' => 'Invalid data',
+                'message' => 'Invalid data',
                 'errors' => [
                     'email' => ['Invalid data']
                 ]

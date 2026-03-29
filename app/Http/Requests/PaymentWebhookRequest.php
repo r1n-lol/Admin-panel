@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\Api\PaymentWebhookController;
 
-class RegisterReuqest extends FormRequest
+class PaymentWebhookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +23,9 @@ class RegisterReuqest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'email'    => 'required|email|unique:users,email',
-            'password' => [
-                'min:3',
-                'string',
-                'required',
-                // 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[_#!%])[A-Za-z\d_#!%]{3,}$/'
-            ]
+       return [
+            'order_id' => 'required|string',
+            'status' => 'required|in:success,failed'
         ];
     }
 }
